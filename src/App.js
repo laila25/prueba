@@ -9,7 +9,10 @@ class App extends React.Component {
     this.state = {
       name: "",
       url: "",
-      children: []
+      children: [],
+      parent: {
+        name: "hola"
+      }
     };
     this.getData = this.getData.bind(this);
     this.getData();
@@ -57,9 +60,15 @@ class App extends React.Component {
 
     console.log(this.state);
     return (
-      <div className="App" id="initechOrgChart">
-        <OrgChart tree={this.state} NodeComponent={MyNodeComponent} />
-      </div>
+      <React.Fragment>
+        <div className="App flex" id="initechOrgChart">
+          <OrgChart tree={this.state.parent} NodeComponent={MyNodeComponent} />
+          <div className="rayita"></div>
+        </div>
+        <div className="App" id="initechOrgChart">
+          <OrgChart tree={this.state} NodeComponent={MyNodeComponent} />
+        </div>
+      </React.Fragment>
     );
   }
 }

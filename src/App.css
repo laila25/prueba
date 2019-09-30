@@ -18,3 +18,18 @@
   width: 100%;
   border-radius: 50%;
 }
+
+.rayita {
+  width: 3px;
+  height: 50px;
+  background-color: red;
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
