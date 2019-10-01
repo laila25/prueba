@@ -73,12 +73,9 @@ body {
 .nodeGroupCell .children {
   margin-left: 55px;
 }
-
-/* .children:first-child {
-  color: lime;
-} */
-
 td[colspan][colspan="4"] .children {
   width: 300px;
+  margin: auto;
+  background-color: blueviolet;
   margin-left: 615px;
 }
