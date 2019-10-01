@@ -7,79 +7,83 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: "",
+      nombre_empleado: "",
+      id: "",
       url: "",
       children: [],
-      parent: [
-        {
-          name: "hola"
-        },
-        {
-          name: "adios"
-        }
-      ]
+      parent: []
     };
     this.getData = this.getData.bind(this);
     this.getValue = this.getValue.bind(this);
+    this.consolea = this.consolea.bind(this);
   }
 
   getData(id) {
-    console.log(id);
-    fetch("./data.json")
+    fetch(`https://adalab-whoiswho.azurewebsites.net/api/employees/${id}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data[0].name);
+        console.log(data);
         this.setState({
-          name: data[0].name
+          nombre_empleado: data.nombre_empleado + data.apellidos_empleado,
+          id: data.id_empleado,
+          url: data.foto_empleado
         });
-        return fetch(`./data-children${data[0].id}.json`)
+        return fetch(
+          `https://adalab-whoiswho.azurewebsites.net/api/employees/${data.id_superior}`
+        )
           .then(response => response.json())
           .then(data => {
             console.log(data);
             this.setState({
-              children: data
+              parent: [data]
             });
-          });
-      });
-    fetch("./data.json")
-      .then(response => response.json())
-      .then(data => {
-        return fetch(`./data-img${data[0].id}.json`)
-          .then(response => response.json())
-          .then(data => {
-            this.setState({
-              url: data.url
-            });
+            if (data.id_superior !== "") {
+              return fetch(
+                `https://adalab-whoiswho.azurewebsites.net/api/employees/${data.id_superior}`
+              )
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data);
+                  const spread = [data, ...this.state.parent];
+                  this.setState({
+                    parent: spread
+                  });
+                });
+            }
           });
       });
   }
 
   getValue(ev) {
-    const value = ev.target.value;
-    console.log(value);
+    const value = parseInt(ev.target.value);
     this.getData(value);
   }
 
+  consolea(ev) {
+    console.log(ev.currentTarget.dataset.id);
+  }
+
   render() {
+    console.log(this.state.parent);
     const MyNodeComponent = ({ node }) => {
       return (
-        <div className="initechNode">
+        <div className="initechNode" onClick={this.consolea} data-id={node.id}>
           <img src={node.url} className="img"></img>
-          <p>{node.name}</p>
+          <p>{node.nombre_empleado}</p>
         </div>
       );
     };
 
-    const parents = this.state.parent.reverse().map(parent => {
+    const parentsState = this.state.parent;
+    const parents = parentsState.map((parent, index) => {
       return (
-        <React.Fragment>
+        <React.Fragment key={index}>
           <OrgChart tree={parent} NodeComponent={MyNodeComponent} />
           <div className="rayita"></div>
         </React.Fragment>
       );
     });
 
-    console.log(this.state);
     return (
       <React.Fragment>
         <input type="text" onChange={this.getValue}></input>
