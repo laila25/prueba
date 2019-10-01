@@ -33,3 +33,7 @@
   justify-content: center;
   align-items: center;
 }
+
+.red{
+  box-shadow: 5px 10px #888888;
+}

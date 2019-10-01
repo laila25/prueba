@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import OrgChart from "react-orgchart";
 import "react-orgchart/index.css";
+import perroViejo from "./perro-viejo.jpg"
 
 class App extends React.Component {
   constructor() {
@@ -12,15 +13,18 @@ class App extends React.Component {
       children: [],
       parent: [
         {
-          name: "hola"
+          name: "hola",
+          url: `${perroViejo}`
         },
         {
-          name: "adios"
+          name: "adios",
+          url: `${perroViejo}`
         }
       ]
     };
     this.getData = this.getData.bind(this);
     this.getValue = this.getValue.bind(this);
+    this.changeColorSelected = this.changeColorSelected.bind(this)
   }
 
   getData(id) {
@@ -60,11 +64,18 @@ class App extends React.Component {
     this.getData(value);
   }
 
+  changeColorSelected(ev) {
+    console.log(ev)
+    const selected = ev.currentTarget
+    selected.classList.remove("initechNode")
+    selected.classList.toggle("red")
+  }
+
   render() {
     const MyNodeComponent = ({ node }) => {
       return (
-        <div className="initechNode">
-          <img src={node.url} className="img"></img>
+        <div onClick={this.changeColorSelected} className="initechNode">
+          <img src={node.url} className="img" alt=""></img>
           <p>{node.name}</p>
         </div>
       );
