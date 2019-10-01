@@ -70,7 +70,6 @@ class App extends React.Component {
     selected.classList.remove("initechNode")
     selected.classList.toggle("red")
   }
-
   render() {
     const MyNodeComponent = ({ node }) => {
       return (
