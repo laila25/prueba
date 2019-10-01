@@ -8,73 +8,79 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: "",
-      url: "",
+      nombre_empleado: "",
+      id: "",
+      foto_empleado: foto,
       children: [],
-      parent: [
-        {
-          name: "hola",
-          url: `${foto}`
-        },
-        {
-          name: "adios",
-          url: `${foto}`
-        },
-        {
-          name: "MariCarmen",
-          url: `${foto}`
-        }
-      ]
+      parent: []
     };
     this.getData = this.getData.bind(this);
     this.getValue = this.getValue.bind(this);
+    this.consolea = this.consolea.bind(this);
   }
 
   getData(id) {
-    console.log(id);
-    fetch("./data.json")
+    fetch(`https://adalab-whoiswho.azurewebsites.net/api/employees/${id}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data[0].name);
+        console.log(data);
         this.setState({
-          name: data[0].name
+          nombre_empleado: data.nombre_empleado + data.apellidos_empleado,
+          id: data.id_empleado
         });
-        return fetch(`./data-children${data[0].id}.json`)
+        return fetch(`https://adalab-whoiswho.azurewebsites.net/api/employees/${data.id_superior}`)
           .then(response => response.json())
           .then(data => {
             console.log(data);
             this.setState({
-              children: data
+              parent: [
+                {
+                  nombre_empleado: data.nombre_empleado + data.apellidos_empleado,
+                  id: data.id_empleado,
+                  foto_empleado: foto
+                }
+              ]
             });
-          });
-      });
-    fetch("./data.json")
-      .then(response => response.json())
-      .then(data => {
-        return fetch(`./data-img${data[0].id}.json`)
-          .then(response => response.json())
-          .then(data => {
-            this.setState({
-              url: data.url
-            });
+            if (data.id_superior !== "") {
+              return fetch(`https://adalab-whoiswho.azurewebsites.net/api/employees/${data.id_superior}`)
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data);
+                  const spread = [
+                    {
+                      nombre_empleado: data.nombre_empleado + data.apellidos_empleado,
+                      id: data.id_empleado,
+                      foto_empleado: foto
+                    },
+                    ...this.state.parent
+                  ];
+                  this.setState({
+                    parent: spread
+                  });
+                });
+            }
           });
       });
   }
 
   getValue(ev) {
-    const value = ev.target.value;
-    // console.log(value);
+    const value = parseInt(ev.target.value);
     this.getData(value);
   }
 
+  consolea(ev) {
+    console.log(ev.currentTarget.dataset.id);
+  }
+
   render() {
+    console.log(this.state.parent);
     const MyNodeComponent = ({ node }) => {
       return (
         <div className="perfil">
           <div className="initechNode">
-            <img src={node.url} className="img" alt={node.name}></img>
+            <img src={node.foto_empleado} className="img" alt={node.nombre_empleado}></img>
           </div>
-          <p className="name">{node.name}</p>
+          <p className="name">{node.nombre_empleado}</p>
         </div>
       );
     };
@@ -82,14 +88,15 @@ class App extends React.Component {
     const MyNodeComponentChildren = ({ node }) => {
       return (
         <div className="children">
-          <div className="initechNode">
-            <img src={node.url} className="img" alt={node.name}></img>
+          <div className="initechNode" onClick={this.consolea} data-id={node.id}>
+            <img src={node.foto_empleado} className="img" alt={node.nombre_empleado}></img>
           </div>
-          <p className="name">{node.name}</p>
+          <p className="name">{node.nombre_empleado}</p>
         </div>
       );
     };
 
+    const parentsState = this.state.parent;
     const parents = this.state.parent.map(parent => {
       return (
         <React.Fragment>
@@ -101,10 +108,8 @@ class App extends React.Component {
       );
     });
 
-    // console.log(this.state);
-
     return (
-      <React.Fragment>
+      <div className="employees-container">
         <input type="text" onChange={this.getValue}></input>
 
         <div className="App flex" id="initechOrgChart">
@@ -114,7 +119,7 @@ class App extends React.Component {
         <div className="App" id="initechOrgChart">
           <OrgChart tree={this.state} NodeComponent={MyNodeComponentChildren} />
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
