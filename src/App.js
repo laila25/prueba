@@ -111,7 +111,7 @@ class App extends React.Component {
           {parents}
         </div>
 
-        <div className="App" className="children" id="initechOrgChart">
+        <div className="App" id="initechOrgChart">
           <OrgChart tree={this.state} NodeComponent={MyNodeComponentChildren} />
         </div>
       </React.Fragment>

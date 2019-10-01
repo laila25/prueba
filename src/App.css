@@ -22,7 +22,7 @@ body {
 }
 .initechNode {
   border: solid 3px rgb(191, 191, 191);
-  border-radius: 50%;
+  border-radius: 48%;
   padding: 5px;
   height: 100px;
   width: 100px;
@@ -33,13 +33,9 @@ body {
   border-right: solid 3px grey;
 }
 
-.nodeCell:nth-child(1) {
-  margin: 0 !important;
-}
-
-/* #initechOrgChart .nodeLineBorderTop {
+#initechOrgChart .nodeLineBorderTop {
   border-top: solid 2px grey;
-} */
+}
 
 .img {
   width: 100%;
@@ -68,10 +64,21 @@ body {
 }
 
 #initechOrgChart.children {
-  margin-left: 35px;
+  margin-left: 205px;
+}
+.reactOrgChart .nodeLineBorderTop {
+  border-top: solid 2px grey;
 }
 
 .nodeGroupCell .children {
   margin-left: 55px;
+}
+
+/* .children:first-child {
+  color: lime;
+} */
+
+td[colspan][colspan="4"] {
+  color: lime;
   background-color: red;
 }
