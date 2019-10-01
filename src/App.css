@@ -78,7 +78,7 @@ body {
   color: lime;
 } */
 
-td[colspan][colspan="4"] {
-  color: lime;
-  background-color: red;
+td[colspan][colspan="4"] .children {
+  width: 300px;
+  margin-left: 615px;
 }
