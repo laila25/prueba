@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import OrgChart from "react-orgchart";
 import "react-orgchart/index.css";
+import foto from "./perfil-defecto.png";
 
 class App extends React.Component {
   constructor() {
@@ -12,10 +13,16 @@ class App extends React.Component {
       children: [],
       parent: [
         {
-          name: "hola"
+          name: "hola",
+          url: `${foto}`
         },
         {
-          name: "adios"
+          name: "adios",
+          url: `${foto}`
+        },
+        {
+          name: "MariCarmen",
+          url: `${foto}`
         }
       ]
     };
@@ -56,30 +63,46 @@ class App extends React.Component {
 
   getValue(ev) {
     const value = ev.target.value;
-    console.log(value);
+    // console.log(value);
     this.getData(value);
   }
 
   render() {
     const MyNodeComponent = ({ node }) => {
       return (
-        <div className="initechNode">
-          <img src={node.url} className="img"></img>
-          <p>{node.name}</p>
+        <div className="perfil">
+          <div className="initechNode">
+            <img src={node.url} className="img" alt={node.name}></img>
+          </div>
+          <p className="name">{node.name}</p>
         </div>
       );
     };
 
-    const parents = this.state.parent.reverse().map(parent => {
+    const MyNodeComponentChildren = ({ node }) => {
+      return (
+        <div className="children">
+          <div className="initechNode">
+            <img src={node.url} className="img" alt={node.name}></img>
+          </div>
+          <p className="name">{node.name}</p>
+        </div>
+      );
+    };
+
+    const parents = this.state.parent.map(parent => {
       return (
         <React.Fragment>
-          <OrgChart tree={parent} NodeComponent={MyNodeComponent} />
+          <div className="center-parents">
+            <OrgChart tree={parent} NodeComponent={MyNodeComponent} />
+          </div>
           <div className="rayita"></div>
         </React.Fragment>
       );
     });
 
-    console.log(this.state);
+    // console.log(this.state);
+
     return (
       <React.Fragment>
         <input type="text" onChange={this.getValue}></input>
@@ -88,8 +111,8 @@ class App extends React.Component {
           {parents}
         </div>
 
-        <div className="App" id="initechOrgChart">
-          <OrgChart tree={this.state} NodeComponent={MyNodeComponent} />
+        <div className="App" className="children" id="initechOrgChart">
+          <OrgChart tree={this.state} NodeComponent={MyNodeComponentChildren} />
         </div>
       </React.Fragment>
     );
