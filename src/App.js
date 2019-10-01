@@ -10,15 +10,21 @@ class App extends React.Component {
       name: "",
       url: "",
       children: [],
-      parent: {
-        name: "hola"
-      }
+      parent: [
+        {
+          name: "hola"
+        },
+        {
+          name: "adios"
+        }
+      ]
     };
     this.getData = this.getData.bind(this);
-    this.getData();
+    this.getValue = this.getValue.bind(this);
   }
 
-  getData() {
+  getData(id) {
+    console.log(id);
     fetch("./data.json")
       .then(response => response.json())
       .then(data => {
@@ -48,6 +54,12 @@ class App extends React.Component {
       });
   }
 
+  getValue(ev) {
+    const value = ev.target.value;
+    console.log(value);
+    this.getData(value);
+  }
+
   render() {
     const MyNodeComponent = ({ node }) => {
       return (
@@ -58,13 +70,24 @@ class App extends React.Component {
       );
     };
 
+    const parents = this.state.parent.reverse().map(parent => {
+      return (
+        <React.Fragment>
+          <OrgChart tree={parent} NodeComponent={MyNodeComponent} />
+          <div className="rayita"></div>
+        </React.Fragment>
+      );
+    });
+
     console.log(this.state);
     return (
       <React.Fragment>
+        <input type="text" onChange={this.getValue}></input>
+
         <div className="App flex" id="initechOrgChart">
-          <OrgChart tree={this.state.parent} NodeComponent={MyNodeComponent} />
-          <div className="rayita"></div>
+          {parents}
         </div>
+
         <div className="App" id="initechOrgChart">
           <OrgChart tree={this.state} NodeComponent={MyNodeComponent} />
         </div>
